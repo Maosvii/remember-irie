@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Remember Irie — Recuerdos Digitales que Perduran</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --fire:#E84E0F;--ember:#FF6A2F;--glow:#FF9A6C;--warm:#FFF0E8;--ash:#FDE8D8;
+  --dark:#120800;--ink:#2A1500;--mid:#7A4020;--muted:#A0623A;--faint:#D4956E;--ghost:#F5E8DF;
+  --surface:#FFFFFF;--bg:#FDF8F4;
+  --font:'DM Sans',sans-serif;--display:'Cormorant Garamond',serif;
+  --r8:8px;--r16:16px;--r24:24px;--r-full:9999px;
+  --shadow-sm:0 1px 4px rgba(18,8,0,0.08);
+  --shadow-md:0 4px 20px rgba(232,78,15,0.12);
+  --shadow-lg:0 12px 48px rgba(232,78,15,0.16);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--warm);}
+::-webkit-scrollbar-thumb{background:var(--fire);border-radius:3px;}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:0 5vw;height:68px;display:flex;align-items:center;justify-content:space-between;background:rgba(253,248,244,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(232,78,15,0.1);transition:all 0.3s;}
+nav.scrolled{box-shadow:var(--shadow-md);}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+.nav-logo img{width:100%;height:100%;object-fit:cover;}
+.nav-name{font-family:var(--display);font-size:20px;font-weight:700;color:var(--dark);letter-spacing:-0.3px;}
+.nav-name em{color:var(--fire);font-style:normal;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;transition:color 0.2s;letter-spacing:0.3px;}
+.nav-links a:hover{color:var(--fire);}
+.nav-cta{padding:9px 22px;background:var(--fire);color:#fff;border-radius:var(--r-full);font-size:13px;font-weight:600;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 14px rgba(232,78,15,0.35);}
+.nav-cta:hover{background:var(--ink);}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.nav-hamburger span{width:22px;height:2px;background:var(--fire);border-radius:2px;transition:all 0.3s;}
+
+/* ─── HERO ─── */
+#hero{min-height:100vh;padding:100px 5vw 60px;display:flex;align-items:center;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(232,78,15,0.08) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(255,106,47,0.06) 0%,transparent 60%),var(--bg);position:relative;overflow:hidden;}
+.hero-grain{position:absolute;inset:0;opacity:0.03;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.hero-inner{max-width:1200px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--fire);background:var(--warm);padding:6px 14px;border-radius:var(--r-full);border:1px solid rgba(232,78,15,0.2);margin-bottom:20px;}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--fire);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+.hero-title{font-family:var(--display);font-size:clamp(42px,5.5vw,72px);font-weight:700;line-height:1.05;letter-spacing:-1px;color:var(--dark);margin-bottom:22px;}
+.hero-title em{color:var(--fire);font-style:italic;}
+.hero-sub{font-size:16px;line-height:1.7;color:var(--muted);max-width:480px;margin-bottom:36px;font-weight:400;}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.btn-fire{padding:14px 32px;background:var(--fire);color:#fff;border-radius:var(--r-full);font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(232,78,15,0.4);transition:all 0.25s;font-family:var(--font);display:inline-flex;align-items:center;gap:8px;}
+.btn-fire:hover{background:var(--ink);transform:translateY(-2px);}
+.btn-ghost{padding:14px 28px;background:transparent;color:var(--ink);border-radius:var(--r-full);font-size:14px;font-weight:600;text-decoration:none;border:1.5px solid rgba(18,8,0,0.15);transition:all 0.2s;cursor:pointer;font-family:var(--font);}
+.btn-ghost:hover{border-color:var(--fire);color:var(--fire);}
+.hero-stats{display:flex;gap:32px;margin-top:40px;padding-top:32px;border-top:1px solid rgba(18,8,0,0.08);}
+.stat-num{font-family:var(--display);font-size:32px;font-weight:700;color:var(--fire);}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500;}
+.hero-visual{display:flex;justify-content:center;align-items:center;position:relative;}
+.hero-card-stack{position:relative;width:100%;max-width:380px;margin:0 auto;}
+.hero-card-main{background:var(--surface);border-radius:24px;padding:24px;box-shadow:var(--shadow-lg);border:1px solid var(--ash);position:relative;z-index:2;}
+.hero-card-behind{position:absolute;top:-14px;left:10px;right:-10px;bottom:10px;background:linear-gradient(135deg,var(--fire),var(--ember));border-radius:24px;z-index:1;opacity:0.3;}
+.hero-card-behind2{position:absolute;top:-24px;left:20px;right:-20px;bottom:18px;background:linear-gradient(135deg,var(--ember),var(--glow));border-radius:24px;z-index:0;opacity:0.15;}
+/* FIX: hero preview con iframe */
+.hcard-preview{height:160px;border-radius:14px;margin-bottom:16px;position:relative;overflow:hidden;background:var(--dark);}
+.hcard-preview iframe{position:absolute;top:-10%;left:-10%;width:120%;height:120%;border:none;pointer-events:none;}
+.hcard-name{font-family:var(--display);font-size:20px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.hcard-sub{font-size:12px;color:var(--muted);margin-bottom:14px;}
+.hcard-row{display:flex;justify-content:space-between;align-items:center;}
+.hcard-price{font-size:18px;font-weight:700;color:var(--fire);}
+.hcard-btn{padding:8px 18px;background:var(--fire);color:#fff;border-radius:var(--r-full);font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--font);}
+
+/* ─── SECTIONS ─── */
+section{padding:96px 5vw;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--fire);margin-bottom:12px;}
+.section-title{font-family:var(--display);font-size:clamp(32px,4vw,52px);font-weight:700;color:var(--dark);line-height:1.1;letter-spacing:-0.5px;margin-bottom:16px;}
+.section-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:560px;}
+.section-header{margin-bottom:56px;}
+.section-header.centered{text-align:center;}
+.section-header.centered .section-sub{margin:0 auto;}
+
+/* ─── CATALOG ─── */
+#catalogo{background:var(--surface);}
+.cat-tabs{display:flex;gap:8px;margin-bottom:48px;flex-wrap:wrap;}
+.cat-tab{padding:10px 24px;border-radius:var(--r-full);font-size:13px;font-weight:600;border:1.5px solid var(--ash);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:var(--font);}
+.cat-tab:hover{border-color:var(--fire);color:var(--fire);}
+.cat-tab.active{background:var(--fire);color:#fff;border-color:var(--fire);}
+.cat-panel{display:none;animation:fi 0.3s ease;}
+.cat-panel.active{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* FIX: cat-video con iframe */
+.cat-video{width:100%;border-radius:20px;overflow:hidden;background:var(--dark);height:280px;position:relative;margin-bottom:40px;}
+.cat-video iframe{position:absolute;top:-10%;left:-10%;width:120%;height:120%;border:none;pointer-events:none;}
+.cat-video-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:flex-start;padding:20px;background:linear-gradient(to top,rgba(18,8,0,0.6) 0%,transparent 60%);pointer-events:none;}
+.cat-video-label{color:#fff;font-size:13px;font-weight:700;letter-spacing:0.3px;background:rgba(232,78,15,0.9);padding:5px 14px;border-radius:var(--r-full);}
+
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
+.prod-card{background:var(--bg);border:1px solid var(--ash);border-radius:20px;overflow:hidden;transition:all 0.25s;cursor:pointer;}
+.prod-card:hover{border-color:var(--fire);box-shadow:var(--shadow-lg);transform:translateY(-4px);}
+
+/* FIX: prod-img con iframe */
+.prod-img{height:200px;position:relative;overflow:hidden;}
+.prod-img.inv-bg{background:linear-gradient(135deg,var(--warm) 0%,var(--ash) 100%);}
+.prod-img.card-bg{background:linear-gradient(135deg,#FEF3E2 0%,#FCDDB0 100%);}
+.prod-img.vid-bg{background:linear-gradient(135deg,#FDECEA 0%,#F8C9C4 100%);}
+.prod-img iframe{position:absolute;top:-10%;left:-10%;width:120%;height:120%;border:none;pointer-events:none;}
+.prod-img-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:52px;z-index:1;}
+.prod-badge{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--r-full);text-transform:uppercase;letter-spacing:0.5px;z-index:2;}
+.prod-badge.gold{background:#FFF3CD;color:#856404;}
+.prod-badge.silver{background:#F0F0F0;color:#495057;}
+.prod-badge.white{background:#F8F9FA;color:#6C757D;}
+.prod-badge.premium{background:var(--warm);color:var(--fire);}
+.prod-badge.basic{background:#F0FFF4;color:#1A7A3A;}
+.prod-badge.tribute{background:#FEE2E2;color:#B91C1C;}
+.prod-body{padding:20px;}
+.prod-name{font-family:var(--display);font-size:20px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.prod-sheets{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.prod-sheets::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--fire);}
+.prod-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.prod-footer{display:flex;align-items:center;justify-content:space-between;}
+.prod-price{font-family:var(--display);font-size:22px;font-weight:700;color:var(--fire);}
+.prod-price-sub{font-size:10px;color:var(--faint);font-family:var(--font);font-weight:400;}
+.prod-buy-btn{padding:9px 20px;background:var(--fire);color:#fff;border-radius:var(--r-full);font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.prod-buy-btn:hover{background:var(--ink);}
+
+/* ─── ABOUT ─── */
+#nosotros{background:var(--dark);color:#fff;position:relative;overflow:hidden;}
+#nosotros::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(232,78,15,0.2) 0%,transparent 70%);}
+#nosotros::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,106,47,0.1) 0%,transparent 70%);}
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;position:relative;z-index:1;}
+.about-label{color:var(--ember);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.about-title{font-family:var(--display);font-size:clamp(30px,4vw,50px);font-weight:700;line-height:1.1;margin-bottom:20px;color:#fff;}
+.about-title em{color:var(--fire);font-style:italic;}
+.about-text{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.65);margin-bottom:16px;}
+.about-values{display:flex;flex-direction:column;gap:14px;margin-top:28px;}
+.about-val{display:flex;align-items:flex-start;gap:14px;}
+.about-val-icon{width:38px;height:38px;border-radius:10px;background:rgba(232,78,15,0.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.about-val-text h4{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px;}
+.about-val-text p{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;}
+.about-visual{position:relative;}
+.about-logo-big{width:100%;aspect-ratio:1;max-width:340px;margin:0 auto;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(232,78,15,0.15) 0%,transparent 70%);position:relative;}
+.about-logo-big img{width:82%;height:82%;object-fit:contain;}
+.about-logo-big::before{content:'';position:absolute;inset:0;border-radius:50%;border:1px solid rgba(232,78,15,0.2);animation:spin-slow 20s linear infinite;}
+.about-logo-ring{position:absolute;inset:-20px;border-radius:50%;border:1px dashed rgba(232,78,15,0.15);animation:spin-slow 30s linear infinite reverse;}
+@keyframes spin-slow{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+
+/* ─── GALLERY ─── */
+#galeria{background:var(--bg);}
+.gallery-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;}
+.gal-item{border-radius:16px;overflow:hidden;background:var(--ash);position:relative;cursor:pointer;transition:all 0.25s;}
+.gal-item:hover{transform:scale(1.02);box-shadow:var(--shadow-lg);}
+.gal-item:nth-child(1){grid-column:span 7;grid-row:span 2;min-height:320px;}
+.gal-item:nth-child(2){grid-column:span 5;min-height:150px;}
+.gal-item:nth-child(3){grid-column:span 5;min-height:150px;}
+.gal-item:nth-child(4){grid-column:span 4;min-height:200px;}
+.gal-item:nth-child(5){grid-column:span 4;min-height:200px;}
+.gal-item:nth-child(6){grid-column:span 4;min-height:200px;}
+
+/* FIX: galería con iframe */
+.gal-inner{width:100%;height:100%;position:relative;overflow:hidden;min-height:inherit;}
+.gal-inner iframe{position:absolute;top:-10%;left:-10%;width:120%;height:120%;border:none;pointer-events:none;}
+.gal-bg-1{background:linear-gradient(135deg,#FFF0E8,#FFD4B8);}
+.gal-bg-2{background:linear-gradient(135deg,#FDE8D8,#F5C4A0);}
+.gal-bg-3{background:linear-gradient(135deg,#FEECD3,#F8B880);}
+.gal-bg-4{background:linear-gradient(135deg,#FDF0E4,#F0C9A0);}
+.gal-bg-5{background:linear-gradient(135deg,#FFE8D6,#FFBF95);}
+.gal-bg-6{background:linear-gradient(135deg,#FFF4EE,#FECBA8);}
+.gal-overlay{position:absolute;inset:0;background:rgba(18,8,0,0);display:flex;align-items:flex-end;padding:16px;transition:background 0.3s;z-index:2;}
+.gal-item:hover .gal-overlay{background:rgba(18,8,0,0.4);}
+.gal-tag{opacity:0;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#fff;background:var(--fire);padding:4px 12px;border-radius:var(--r-full);transition:opacity 0.3s;}
+.gal-item:hover .gal-tag{opacity:1;}
+.gal-emoji-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(40px,5vw,72px);z-index:1;}
+
+/* ─── MODAL FORMULARIO ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(18,8,0,0.65);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;animation:fade-in 0.2s ease;}
+@keyframes fade-in{from{opacity:0;}to{opacity:1;}}
+.modal-sheet{background:var(--surface);border-radius:28px 28px 0 0;width:100%;max-width:680px;max-height:92vh;overflow-y:auto;padding:0 0 32px;animation:slide-up 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes slide-up{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-handle{width:40px;height:4px;background:var(--ash);border-radius:2px;margin:14px auto 0;}
+.modal-header{background:var(--fire);padding:20px 24px;color:#fff;position:relative;}
+.modal-header h2{font-family:var(--display);font-size:22px;font-weight:700;margin-bottom:4px;}
+.modal-header p{font-size:12px;opacity:0.8;}
+.modal-close-btn{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-body{padding:24px;}
+.m-section{font-size:11px;font-weight:700;color:var(--fire);text-transform:uppercase;letter-spacing:0.8px;margin:18px 0 10px;padding-left:10px;border-left:3px solid var(--fire);}
+.m-row{display:flex;gap:12px;}
+.m-row .m-field{flex:1;}
+.m-field{margin-bottom:12px;}
+.m-label{font-size:11px;color:var(--muted);margin-bottom:4px;display:block;font-weight:500;}
+.m-input{width:100%;padding:10px 13px;font-size:13px;font-family:var(--font);border:1.5px solid var(--ash);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;transition:border-color 0.2s;}
+.m-input:focus{border-color:var(--fire);}
+textarea.m-input{resize:vertical;}
+.m-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.m-tag{padding:4px 12px;font-size:11px;border-radius:var(--r-full);background:var(--warm);border:1.5px solid var(--ash);color:var(--muted);cursor:pointer;font-weight:500;transition:all 0.15s;font-family:var(--font);}
+.m-tag:hover{border-color:var(--fire);color:var(--fire);}
+.m-tag.sel{background:var(--fire);border-color:var(--fire);color:#fff;}
+
+/* FIX: upload funcional con input real */
+.upload-wrapper{position:relative;}
+.upload-input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;}
+.upload-box{border:2px dashed var(--ash);border-radius:12px;padding:18px;text-align:center;background:var(--warm);transition:border-color 0.2s;position:relative;}
+.upload-box:hover,.upload-box.has-files{border-color:var(--fire);background:#FFF8F4;}
+.upload-box-icon{font-size:22px;margin-bottom:6px;}
+.upload-box-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.upload-box-limit{font-size:10px;color:var(--faint);margin-top:4px;}
+.upload-bar{height:5px;border-radius:3px;background:var(--ash);margin-top:8px;overflow:hidden;}
+.upload-fill{height:100%;border-radius:3px;background:var(--fire);transition:width 0.4s;}
+.upload-filelist{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
+.upload-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;background:var(--warm);border:1px solid var(--ash);border-radius:var(--r-full);padding:3px 10px;color:var(--ink);}
+.upload-chip button{background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px;line-height:1;padding:0;}
+
+.modal-submit{width:100%;padding:14px;background:var(--fire);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:20px;transition:all 0.2s;box-shadow:0 6px 20px rgba(232,78,15,0.35);}
+.modal-submit:hover{background:var(--ink);}
+
+/* ─── PAGO ─── */
+#pago-overlay{display:none;position:fixed;inset:0;background:rgba(18,8,0,0.7);z-index:1100;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);}
+#pago-overlay.open{display:flex;}
+.pago-card{background:#fff;border-radius:24px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.3);}
+.pago-head{background:var(--fire);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.pago-head-info small{color:rgba(255,255,255,0.7);font-size:10px;display:block;margin-bottom:2px;letter-spacing:0.5px;text-transform:uppercase;}
+.pago-head-info strong{color:#fff;font-family:var(--display);font-size:18px;}
+.pago-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pago-summary{background:var(--warm);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--ash);}
+.pago-summary small{font-size:11px;color:var(--muted);display:block;margin-bottom:2px;}
+#pago-producto{font-size:14px;font-weight:700;color:var(--dark);}
+#pago-precio{font-size:22px;font-weight:700;color:var(--fire);font-family:var(--display);}
+.pago-body{padding:20px;}
+.metodos{display:flex;gap:8px;margin-bottom:18px;}
+.metodo-btn{flex:1;padding:12px 8px;border:1.5px solid var(--ash);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.15s;background:var(--bg);}
+.metodo-btn:hover{border-color:var(--fire);}
+.metodo-btn.sel{border-color:var(--fire);background:var(--warm);}
+.metodo-btn .mico{font-size:20px;margin-bottom:4px;}
+.metodo-btn .mlbl{font-size:11px;font-weight:600;color:var(--muted);}
+.metodo-btn.sel .mlbl{color:var(--fire);}
+.pago-panel{display:none;}
+.pago-panel.active{display:block;}
+.pf-label{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:4px;display:block;}
+.pf-input{width:100%;padding:10px 13px;font-size:13px;border:1.5px solid var(--ash);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:10px;font-family:var(--font);}
+.pf-input:focus{border-color:var(--fire);}
+.pf-row{display:flex;gap:10px;}
+.pf-row>div{flex:1;}
+.ssl-notice{display:flex;align-items:center;gap:8px;background:var(--warm);border-radius:8px;padding:9px 12px;margin:12px 0;}
+.ssl-notice span:first-child{font-size:16px;}
+.ssl-notice span:last-child{font-size:11px;color:var(--muted);}
+.pay-now-btn{width:100%;padding:13px;background:var(--fire);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background 0.2s;box-shadow:0 4px 16px rgba(232,78,15,0.35);}
+.pay-now-btn:hover{background:var(--ink);}
+.pago-exito{display:none;padding:32px 20px;text-align:center;}
+.pago-exito-icon{width:64px;height:64px;border-radius:50%;background:#E8F5E9;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;}
+.pago-exito h3{font-family:var(--display);font-size:22px;margin-bottom:8px;}
+.pago-exito p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.exito-summary{background:var(--warm);border-radius:12px;padding:14px;text-align:left;margin-bottom:20px;}
+.exito-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;}
+.exito-label{color:var(--muted);}
+.exito-val{font-weight:700;}
+.back-home-btn{width:100%;padding:12px;background:var(--fire);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;}
+
+/* ─── FOOTER ─── */
+footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:48px 5vw 28px;}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px;margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.footer-logo-img{width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+.footer-logo-img img{width:100%;height:100%;object-fit:cover;}
+.footer-logo-name{font-family:var(--display);font-size:18px;color:#fff;font-weight:700;}
+.footer-logo-name em{color:var(--fire);font-style:normal;}
+.footer-tagline{font-size:13px;line-height:1.6;max-width:260px;}
+.footer-links h4{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:14px;}
+.footer-links ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--fire);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:12px;}
+.footer-wa{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.3);border-radius:var(--r-full);color:#25D366;font-size:13px;font-weight:600;text-decoration:none;transition:all 0.2s;}
+.footer-wa:hover{background:rgba(37,211,102,0.25);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none;}
+  .nav-hamburger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .hero-visual{display:none;}
+  .about-inner{grid-template-columns:1fr;}
+  .about-visual{display:none;}
+  .gallery-grid{grid-template-columns:1fr 1fr;}
+  .gal-item:nth-child(1){grid-column:span 2;grid-row:span 1;min-height:200px;}
+  .gal-item:nth-child(2),.gal-item:nth-child(3){grid-column:span 1;}
+  .gal-item:nth-child(4),.gal-item:nth-child(5),.gal-item:nth-child(6){grid-column:span 1;}
+  .footer-top{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV — FIX: cerrar el div del logo correctamente y mostrar nombre -->
+<nav id="navbar">
+  <a class="nav-brand" href="#">
+    <div class="nav-logo"><img src="img/logo.png" alt="Logo Remember Irie"/></div>
+    <span class="nav-name">Remember <em>Irie</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#catalogo">Servicios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#galeria">Galería</a></li>
+  </ul>
+  <a href="#catalogo" class="nav-cta">Ver servicios →</a>
+  <div class="nav-hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">✨ Recuerdos digitales únicos</div>
+      <h1 class="hero-title">Momentos que<br/><em>nunca se</em><br/>olvidan</h1>
+      <p class="hero-sub">Creamos invitaciones digitales, cartas y videos homenaje personalizados que capturan la esencia de cada momento especial.</p>
+      <div class="hero-actions">
+        <a href="#catalogo" class="btn-fire">Ver nuestros servicios →</a>
+        <a href="#galeria" class="btn-ghost">Ver galería</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">200+</div><div class="stat-lbl">Clientes felices</div></div>
+        <div class="stat-item"><div class="stat-num">5★</div><div class="stat-lbl">Calificación promedio</div></div>
+        <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">Servicios únicos</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="hero-card-behind2"></div>
+        <div class="hero-card-behind"></div>
+        <div class="hero-card-main">
+          <div class="hcard-preview">
+            <iframe src="https://www.youtube.com/embed/UfpLwL5Jrik?autoplay=1&mute=1&loop=1&playlist=UfpLwL5Jrik&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="hcard-name">Invitación Dorada</div>
+          <div class="hcard-sub">10 hojas · Lujo y exclusividad</div>
+          <div class="hcard-row">
+            <div>
+              <div class="hcard-price">$85.000 COP</div>
+              <div style="font-size:10px;color:var(--faint);">≈ $20,39 USD</div>
+            </div>
+            <button class="hcard-btn" onclick="abrirModal('inv','Invitación Dorada','$85.000 COP')">Pedir →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATÁLOGO -->
+<section id="catalogo">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Nuestros servicios</div>
+      <h2 class="section-title">Elige tu recuerdo<br/>perfecto</h2>
+      <p class="section-sub">Cada producto es diseñado a mano, con amor y atención al detalle para que sea exactamente como lo imaginas.</p>
+    </div>
+    <div class="cat-tabs">
+      <button class="cat-tab active" onclick="switchTab('inv',this)">✉️ Invitaciones</button>
+      <button class="cat-tab" onclick="switchTab('carta',this)">💝 Cartas Digitales</button>
+      <button class="cat-tab" onclick="switchTab('vid',this)">🎬 Video Homenaje</button>
+    </div>
+
+    <!-- PANEL INVITACIONES -->
+    <div class="cat-panel active" id="panel-inv">
+      <div class="cat-video">
+        <iframe src="https://www.youtube.com/embed/oTXnHHlMTso?autoplay=1&mute=1&loop=1&playlist=oTXnHHlMTso&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="cat-video-overlay"><span class="cat-video-label">Vista previa · Invitaciones digitales</span></div>
+      </div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-img inv-bg">
+            <iframe src="https://www.youtube.com/embed/cACifIMpqxo?autoplay=1&mute=1&loop=1&playlist=cACifIMpqxo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&start=5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <span class="prod-badge white">Blanca</span>
+          </div>
+          <div class="prod-body">
+            <div class="prod-name">Invitación Blanca</div>
+            <div class="prod-sheets">3 hojas incluidas</div>
+            <div class="prod-desc">El blanco simboliza pureza y simplicidad. Diseño digital personalizado con tus datos y fotos.</div>
+            <div class="prod-footer">
+              <div><div class="prod-price">$30.000</div><div class="prod-price-sub">COP · ≈ $7,20 USD</div></div>
+              <button class="prod-buy-btn" onclick="abrirModal('inv','Invitación Blanca','$30.000 COP')">Pedir →</button>
+            </div>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-img inv-bg">
+            <iframe src="https://www.youtube.com/embed/r8es2-4jL6U?autoplay=1&mute=1&loop=1&playlist=r8es2-4jL6U&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&start=10" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <span class="prod-badge silver">Plateada</span>
+          </div>
+          <div class="prod-body">
+            <div class="prod-name">Invitación Plateada</div>
+            <div class="prod-sheets">5 hojas incluidas</div>
+            <div class="prod-desc">El plateado refleja elegancia y modernidad. Perfecta para eventos con estilo contemporáneo.</div>
+            <div class="prod-footer">
+              <div><div class="prod-price">$50.000</div><div class="prod-price-sub">COP · ≈ $12,00 USD</div></div>
+              <button class="prod-buy-btn" onclick="abrirModal('inv','Invitación Plateada','$50.000 COP')">Pedir →</button>
+            </div>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-img inv-bg">
+            <iframe src="https://www.youtube.com/embed/U27CwAakPKA?autoplay=1&mute=1&loop=1&playlist=U27CwAakPKA&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&start=15" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <span class="prod-badge gold">Dorada ⭐</span>
+          </div>
+          <div class="prod-body">
+            <div class="prod-name">Invitación Dorada</div>
+            <div class="prod-sheets">10 hojas incluidas</div>
+            <div class="prod-desc">El dorado representa exclusividad, lujo y prestigio. La invitación más completa y elaborada.</div>
+            <div class="prod-footer">
+              <div><div class="prod-price">$85.000</div><div class="prod-price-sub">COP · ≈ $20,39 USD</div></div>
+              <button class="prod-buy-btn" onclick="abrirModal('inv','Invitación Dorada','$85.000 COP')">Pedir →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL CARTAS -->
+    <div class="cat-panel" id="panel-carta">
+      <div class="cat-video">
+        <iframe src="https://www.youtube.com/embed/PgH0ZR_BrQs?autoplay=1&mute=1&loop=1&playlist=PgH0ZR_BrQs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="cat-video-overlay"><span class="cat-video-label">Vista previa · Cartas digitales</span></div>
+      </div>
+      <div class="products-grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr));">
+        <div class="prod-card">
+          <div class="prod-img card-bg">
+            <iframe src="https://www.youtube.com/embed/3bsqjQ-aAAk?autoplay=1&mute=1&loop=1&playlist=3bsqjQ-aAAk&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <span class="prod-badge premium">Premium</span>
+          </div>
+          <div class="prod-body">
+            <div class="prod-name">Carta Dahlia</div>
+            <div class="prod-sheets">5 hojas incluidas</div>
+            <div class="prod-desc">Representa belleza y simbolismo, con emotividad y profundidad. Para quien merece algo especial.</div>
+            <div class="prod-footer">
+              <div><div class="prod-price">$40.000</div><div class="prod-price-sub">COP · ≈ $9,60 USD</div></div>
+              <button class="prod-buy-btn" onclick="abrirModal('carta','Carta Dahlia Premium','$40.000 COP')">Pedir →</button>
+            </div>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-img card-bg">
+            <iframe src="https://www.youtube.com/embed/5CNXGzEnoiw?autoplay=1&mute=1&loop=1&playlist=5CNXGzEnoiw&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&start=8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <span class="prod-badge basic">Básica</span>
+          </div>
+          <div class="prod-body">
+            <div class="prod-name">Carta Lirio</div>
+            <div class="prod-sheets">3 hojas incluidas</div>
+            <div class="prod-desc">Simboliza pureza y sencillez. Un mensaje sincero y directo para los momentos del corazón.</div>
+            <div class="prod-footer">
+              <div><div class="prod-price">$25.000</div><div class="prod-price-sub">COP · ≈ $6,00 USD</div></div>
+              <button class="prod-buy-btn" onclick="abrirModal('carta','Carta Lirio Básica','$25.000 COP')">Pedir →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL HOMENAJE -->
+    <div class="cat-panel" id="panel-vid">
+      <div class="cat-video">
+        <iframe src="https://www.youtube.com/embed/PKgoFrNXMvY?autoplay=1&mute=1&loop=1&playlist=PKgoFrNXMvY&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="cat-video-overlay"><span class="cat-video-label">Vista previa · Video Homenaje</span></div>
+      </div>
+      <div class="products-grid" style="grid-template-columns:minmax(300px,520px);">
+        <div class="prod-card">
+          <div class="prod-img vid-bg">
+            <iframe src="https://www.youtube.com/embed/E2zH1DtX4ns?autoplay=1&mute=1&loop=1&playlist=E2zH1DtX4ns&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <span class="prod-badge tribute">Video Tributo</span>
+          </div>
+          <div class="prod-body">
+            <div class="prod-name">Video Homenaje</div>
+            <div class="prod-sheets">Hasta 12 fotos · 1–3 min</div>
+            <div class="prod-desc">Forma emotiva y visualmente atractiva de honrar a alguien especial. Con música, efectos y tu mensaje personalizado.</div>
+            <div class="prod-footer">
+              <div><div class="prod-price">$120.000</div><div class="prod-price-sub">COP · ≈ $28,79 USD</div></div>
+              <button class="prod-buy-btn" onclick="abrirModal('vid','Video Homenaje','$120.000 COP')">Pedir →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="section-inner">
+    <div class="about-inner">
+      <div>
+        <div class="about-label">Sobre nosotros</div>
+        <h2 class="about-title">Más que diseño,<br/><em>creamos emociones</em></h2>
+        <p class="about-text">Remember Irie nació de la convicción de que cada momento especial merece ser celebrado de manera única. Somos un equipo apasionado por el diseño digital y las historias humanas.</p>
+        <p class="about-text">Cada pieza que creamos lleva consigo horas de dedicación, atención al detalle y el deseo genuino de que el destinatario sienta algo especial al recibirla.</p>
+        <div class="about-values">
+          <div class="about-val"><div class="about-val-icon">🔥</div><div class="about-val-text"><h4>Pasión por el detalle</h4><p>Cada elemento es pensado con cuidado para que el resultado sea perfecto.</p></div></div>
+          <div class="about-val"><div class="about-val-icon">💎</div><div class="about-val-text"><h4>Diseño exclusivo</h4><p>Ningún diseño se repite. Cada pieza es única, igual que el momento que representa.</p></div></div>
+          <div class="about-val"><div class="about-val-icon">❤️</div><div class="about-val-text"><h4>Con amor en cada pixel</h4><p>Tu historia merece ser contada de la forma más bella posible.</p></div></div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-logo-big">
+          <div class="about-logo-ring"></div>
+          <img src="img/logo.png" alt="Logo Remember Irie"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA — FIX: iframes en cada celda, overlay encima -->
+<section id="galeria">
+  <div class="section-inner">
+    <div class="section-header centered">
+      <div class="section-label">Galería de trabajos</div>
+      <h2 class="section-title">Algunos de nuestros<br/>recuerdos favoritos</h2>
+      <p class="section-sub">Cada trabajo es una historia diferente. Aquí una muestra de lo que hemos creado con amor para nuestros clientes.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gal-item">
+        <div class="gal-inner gal-bg-1">
+          <iframe src="https://www.youtube.com/embed/UfpLwL5Jrik?autoplay=1&mute=1&loop=1&playlist=UfpLwL5Jrik&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="gal-overlay"><span class="gal-tag">Invitación Dorada</span></div>
+        </div>
+      </div>
+      <div class="gal-item">
+        <div class="gal-inner gal-bg-2">
+          <iframe src="https://www.youtube.com/embed/PKgoFrNXMvY?autoplay=1&mute=1&loop=1&playlist=PKgoFrNXMvY&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="gal-overlay"><span class="gal-tag">Video Homenaje</span></div>
+        </div>
+      </div>
+      <div class="gal-item">
+        <div class="gal-inner gal-bg-3">
+          <iframe src="https://www.youtube.com/embed/OvJ5L_kzwPs?autoplay=1&mute=1&loop=1&playlist=OvJ5L_kzwPs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="gal-overlay"><span class="gal-tag">Carta Dahlia</span></div>
+        </div>
+      </div>
+      <div class="gal-item">
+        <div class="gal-inner gal-bg-4">
+          <iframe src="https://www.youtube.com/embed/oTXnHHlMTso?autoplay=1&mute=1&loop=1&playlist=oTXnHHlMTso&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="gal-overlay"><span class="gal-tag">Invitación Plateada</span></div>
+        </div>
+      </div>
+      <div class="gal-item">
+        <div class="gal-inner gal-bg-5">
+          <iframe src="https://www.youtube.com/embed/5CNXGzEnoiw?autoplay=1&mute=1&loop=1&playlist=5CNXGzEnoiw&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&start=12" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="gal-overlay"><span class="gal-tag">Carta Lirio</span></div>
+        </div>
+      </div>
+      <div class="gal-item">
+        <div class="gal-inner gal-bg-6">
+          <iframe src="https://www.youtube.com/embed/HS-jtcXctAU?autoplay=1&mute=1&loop=1&playlist=HS-jtcXctAU&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&start=20" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="gal-overlay"><span class="gal-tag">Invitación Dorada</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-img"><img src="img/logo.png" alt="Logo Remember Irie"/></div>
+          <span class="footer-logo-name">Remember <em>Irie</em></span>
+        </div>
+        <p class="footer-tagline">Creamos recuerdos digitales únicos que perduran para siempre en el corazón.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="#catalogo" onclick="switchTab('inv',document.querySelector('.cat-tab'));return false;">Invitaciones Digitales</a></li>
+          <li><a href="#catalogo" onclick="switchTab('carta',document.querySelectorAll('.cat-tab')[1]);return false;">Cartas Digitales</a></li>
+          <li><a href="#catalogo" onclick="switchTab('vid',document.querySelectorAll('.cat-tab')[2]);return false;">Video Homenaje</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Compañía</h4>
+        <ul>
+          <li><a href="#nosotros">Sobre nosotros</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#catalogo">Precios</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Remember Irie · Todos los derechos reservados</div>
+      <a href="https://wa.me/573000000000" target="_blank" class="footer-wa"><span>💬</span> Escríbenos por WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL FORMULARIO — FIX: uploads funcionales con input real -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal-sheet" id="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2 id="modal-title">Personalizar pedido</h2>
+      <p id="modal-subtitle">Completa los detalles de tu recuerdo</p>
+      <button class="modal-close-btn" onclick="cerrarModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="m-section">Datos del evento</div>
+      <div class="m-field">
+        <span class="m-label">Tipo de ocasión</span>
+        <div class="m-tags">
+          <span class="m-tag sel">🎂 Cumpleaños</span><span class="m-tag">💒 Boda</span>
+          <span class="m-tag">🎓 Grado</span><span class="m-tag">🕊️ Memorial</span>
+          <span class="m-tag">🎉 Celebración</span><span class="m-tag">✨ Otro</span>
+        </div>
+      </div>
+      <div class="m-row">
+        <div class="m-field"><span class="m-label">Para quién</span><input class="m-input" type="text" placeholder="Nombre del destinatario"/></div>
+        <div class="m-field"><span class="m-label">De parte de</span><input class="m-input" type="text" placeholder="Tu nombre o firma"/></div>
+      </div>
+      <div class="m-field"><span class="m-label">Mensaje principal</span><textarea class="m-input" rows="3" placeholder="Escribe tu dedicatoria, ideas o el texto que quieres incluir..."></textarea></div>
+
+      <div id="campos-inv">
+        <div class="m-row">
+          <div class="m-field"><span class="m-label">Fecha del evento</span><input class="m-input" type="date"/></div>
+          <div class="m-field"><span class="m-label">Hora</span><input class="m-input" type="time"/></div>
+        </div>
+        <div class="m-field"><span class="m-label">Lugar</span><input class="m-input" type="text" placeholder="Salón, dirección del evento..."/></div>
+      </div>
+      <div id="campos-carta" style="display:none;">
+        <div class="m-field">
+          <span class="m-label">Estilo visual</span>
+          <div class="m-tags"><span class="m-tag sel">🌸 Romántico</span><span class="m-tag">🎨 Moderno</span><span class="m-tag">📜 Clásico</span><span class="m-tag">🎉 Festivo</span></div>
+        </div>
+      </div>
+      <div id="campos-vid" style="display:none;">
+        <div class="m-field"><span class="m-label">Nombre del homenajeado</span><input class="m-input" type="text" placeholder="Nombre completo..."/></div>
+      </div>
+
+      <div class="m-section">Archivos</div>
+
+      <!-- FOTOS — input real oculto -->
+      <div class="m-field">
+        <span class="m-label" id="fotos-label">Fotos · máx. 10 fotos · 30 MB total</span>
+        <div class="upload-wrapper">
+          <input type="file" class="upload-input" id="fotos-input" accept="image/jpeg,image/png,image/webp" multiple onchange="handleFotos(this)"/>
+          <div class="upload-box" id="fotos-box">
+            <div class="upload-box-icon">🖼️</div>
+            <div class="upload-box-text">Haz clic aquí para subir fotos · JPG, PNG</div>
+            <div class="upload-box-limit" id="fotos-limit">Cada foto máx. 5 MB · hasta 10 fotos</div>
+            <div class="upload-bar"><div class="upload-fill" id="fotos-fill" style="width:0%;"></div></div>
+          </div>
+        </div>
+        <div class="upload-filelist" id="fotos-list"></div>
+      </div>
+
+      <!-- AUDIO -->
+      <div class="m-field" id="audio-field">
+        <span class="m-label" id="audio-label">Música de fondo (opcional)</span>
+        <div class="upload-wrapper">
+          <input type="file" class="upload-input" id="audio-input" accept="audio/mpeg,audio/mp3,audio/m4a,audio/*" onchange="handleAudio(this)"/>
+          <div class="upload-box" id="audio-box">
+            <div class="upload-box-icon">🎵</div>
+            <div class="upload-box-text" id="audio-text">Haz clic aquí para subir tu canción · MP3</div>
+            <div class="upload-box-limit" id="audio-limit">Máx. 1 archivo · hasta 8 MB</div>
+            <div class="upload-bar"><div class="upload-fill" id="audio-fill" style="width:0%;"></div></div>
+          </div>
+        </div>
+        <div class="upload-filelist" id="audio-list"></div>
+      </div>
+
+      <!-- VOZ -->
+      <div class="m-field" id="voz-field" style="display:none;">
+        <span class="m-label">Audio de voz · narración (opcional)</span>
+        <div class="upload-wrapper">
+          <input type="file" class="upload-input" id="voz-input" accept="audio/mpeg,audio/mp3,audio/m4a,audio/*" onchange="handleVoz(this)"/>
+          <div class="upload-box" id="voz-box">
+            <div class="upload-box-icon">🎙️</div>
+            <div class="upload-box-text">Haz clic aquí para subir narración · MP3, M4A</div>
+            <div class="upload-box-limit">Máx. 1 archivo · hasta 20 MB · máx. 5 min</div>
+            <div class="upload-bar"><div class="upload-fill" id="voz-fill" style="width:0%;"></div></div>
+          </div>
+        </div>
+        <div class="upload-filelist" id="voz-list"></div>
+      </div>
+
+      <div class="m-field"><span class="m-label">Notas al diseñador</span><textarea class="m-input" rows="2" placeholder="Colores preferidos, estilo, indicaciones especiales..."></textarea></div>
+      <div class="m-field"><span class="m-label">Tu correo de contacto</span><input class="m-input" type="email" placeholder="para enviarte el resultado"/></div>
+      <div class="m-field"><span class="m-label">Tu WhatsApp</span><input class="m-input" type="tel" placeholder="+57 300 000 0000"/></div>
+      <button class="modal-submit" id="modal-submit-btn">Confirmar pedido →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGO OVERLAY -->
+<div id="pago-overlay" onclick="cerrarPagoOutside(event)">
+  <div class="pago-card" onclick="event.stopPropagation()">
+    <div class="pago-head">
+      <div class="pago-head-info">
+        <small>Pago seguro · Remember Irie</small>
+        <strong>Completa tu pedido</strong>
+      </div>
+      <button class="pago-close" onclick="cerrarPago()">×</button>
+    </div>
+    <div class="pago-summary">
+      <div><small>Tu pedido</small><div id="pago-producto"></div></div>
+      <div id="pago-precio"></div>
+    </div>
+    <div class="pago-body">
+      <div class="metodos">
+        <div class="metodo-btn sel" onclick="selMetodo(this,'card')"><div class="mico">💳</div><div class="mlbl">Tarjeta</div></div>
+        <div class="metodo-btn" onclick="selMetodo(this,'nequi')"><div class="mico">📱</div><div class="mlbl">Nequi</div></div>
+        <div class="metodo-btn" onclick="selMetodo(this,'pse')"><div class="mico">🏦</div><div class="mlbl">PSE</div></div>
+      </div>
+      <div class="pago-panel active" id="pp-card">
+        <label class="pf-label">Número de tarjeta</label>
+        <input class="pf-input" placeholder="0000  0000  0000  0000" maxlength="19" oninput="this.value=this.value.replace(/[^0-9]/g,'').replace(/(.{4})/g,'$1 ').trim().substring(0,19)"/>
+        <div class="pf-row">
+          <div><label class="pf-label">Vencimiento</label><input class="pf-input" placeholder="MM / AA" maxlength="7" oninput="let v=this.value.replace(/\D/g,'');if(v.length>=3)v=v.substring(0,2)+' / '+v.substring(2,4);this.value=v;"/></div>
+          <div><label class="pf-label">CVV</label><input class="pf-input" placeholder="•••" maxlength="3" type="password"/></div>
+        </div>
+        <label class="pf-label">Nombre en la tarjeta</label>
+        <input class="pf-input" placeholder="ANA GARCIA"/>
+      </div>
+      <div class="pago-panel" id="pp-nequi">
+        <div style="text-align:center;background:var(--warm);border-radius:12px;padding:18px;margin-bottom:12px;">
+          <div style="font-size:32px;margin-bottom:8px;">📱</div>
+          <div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px;">Pagar con Nequi</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">Recibirás una notificación push en tu app Nequi para aprobar el pago.</div>
+        </div>
+        <label class="pf-label">Número Nequi</label>
+        <input class="pf-input" placeholder="+57 300 000 0000"/>
+      </div>
+      <div class="pago-panel" id="pp-pse">
+        <label class="pf-label">Banco</label>
+        <select class="pf-input"><option value="">Selecciona tu banco...</option><option>Bancolombia</option><option>Davivienda</option><option>Banco de Bogotá</option><option>BBVA</option><option>Banco Popular</option></select>
+        <div class="pf-row">
+          <label style="flex:1;border:1.5px solid var(--ash);border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--muted);background:var(--bg);"><input type="radio" name="tipo" value="natural" checked/> Natural</label>
+          <label style="flex:1;border:1.5px solid var(--ash);border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--muted);background:var(--bg);"><input type="radio" name="tipo" value="juridica"/> Jurídica</label>
+        </div>
+      </div>
+      <div class="ssl-notice"><span>🔒</span><span>Pago cifrado con SSL · Tus datos están seguros</span></div>
+      <button class="pay-now-btn" onclick="pagarAhora()">Pagar ahora →</button>
+    </div>
+    <div class="pago-exito" id="pago-exito">
+      <div class="pago-exito-icon">✓</div>
+      <h3>¡Pago exitoso!</h3>
+      <p>Tu pedido fue recibido. Te contactaremos pronto para comenzar a crear tu recuerdo especial.</p>
+      <div class="exito-summary">
+        <div class="exito-row"><span class="exito-label">Producto</span><span class="exito-val" id="exito-prod"></span></div>
+        <div style="height:1px;background:var(--ash);margin:6px 0;"></div>
+        <div class="exito-row"><span class="exito-label">Total</span><span class="exito-val" style="color:var(--fire);" id="exito-prec"></span></div>
+        <div class="exito-row"><span class="exito-label">N.° de orden</span><span class="exito-val">#RI-2847</span></div>
+      </div>
+      <button class="back-home-btn" onclick="cerrarPago();reiniciarPago();">Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// NAV scroll
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>30));
+
+// CAT TABS
+function switchTab(id,btn){
+  document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// TAGS
+document.addEventListener('click',function(e){
+  if(e.target.classList.contains('m-tag')){
+    e.target.closest('.m-tags').querySelectorAll('.m-tag').forEach(t=>t.classList.remove('sel'));
+    e.target.classList.add('sel');
+  }
+});
+
+// ── UPLOAD HANDLERS ──────────────────────────────
+const CONFIG = {
+  inv:  { fotosMax:10, fotosSize:5, totalMB:30, audioSize:8 },
+  carta:{ fotosMax:10, fotosSize:5, totalMB:25, audioSize:10 },
+  vid:  { fotosMax:12, fotosSize:8, totalMB:60, audioSize:20 }
+};
+let currentType='';
+let fotosFiles=[], audioFile=null, vozFile=null;
+
+function fmt(bytes){ return (bytes/(1024*1024)).toFixed(1)+' MB'; }
+
+function handleFotos(input){
+  const cfg=CONFIG[currentType]||CONFIG.inv;
+  const newFiles=Array.from(input.files);
+  const errors=[];
+  newFiles.forEach(f=>{
+    if(f.size>cfg.fotosSize*1024*1024) errors.push(f.name+' supera '+cfg.fotosSize+' MB');
+    else if(fotosFiles.length>=cfg.fotosMax) errors.push('Límite de '+cfg.fotosMax+' fotos alcanzado');
+    else fotosFiles.push(f);
+  });
+  if(errors.length) alert('⚠️ '+errors.join('\n'));
+  renderFotosList();
+  input.value='';
+}
+
+function renderFotosList(){
+  const cfg=CONFIG[currentType]||CONFIG.inv;
+  const list=document.getElementById('fotos-list');
+  const fill=document.getElementById('fotos-fill');
+  const box=document.getElementById('fotos-box');
+  const totalBytes=fotosFiles.reduce((s,f)=>s+f.size,0);
+  const pct=Math.min(100,(totalBytes/(cfg.totalMB*1024*1024))*100);
+  fill.style.width=pct+'%';
+  fill.style.background=pct>85?'#EF4444':'var(--fire)';
+  document.querySelector('#fotos-box .upload-box-limit').textContent=
+    fotosFiles.length+' fotos · '+fmt(totalBytes)+' de '+cfg.totalMB+' MB usados';
+  box.classList.toggle('has-files',fotosFiles.length>0);
+  list.innerHTML=fotosFiles.map((f,i)=>
+    `<span class="upload-chip">🖼️ ${f.name.length>20?f.name.slice(0,18)+'…':f.name} <small>(${fmt(f.size)})</small><button onclick="quitarFoto(${i})">×</button></span>`
+  ).join('');
+}
+function quitarFoto(i){ fotosFiles.splice(i,1); renderFotosList(); }
+
+function handleAudio(input){
+  const cfg=CONFIG[currentType]||CONFIG.inv;
+  const f=input.files[0]; if(!f) return;
+  if(f.size>cfg.audioSize*1024*1024){ alert('⚠️ El archivo supera '+cfg.audioSize+' MB'); input.value=''; return; }
+  audioFile=f;
+  renderAudio();
+  input.value='';
+}
+function renderAudio(){
+  const cfg=CONFIG[currentType]||CONFIG.inv;
+  const fill=document.getElementById('audio-fill');
+  const list=document.getElementById('audio-list');
+  const box=document.getElementById('audio-box');
+  if(audioFile){
+    const pct=Math.min(100,(audioFile.size/(cfg.audioSize*1024*1024))*100);
+    fill.style.width=pct+'%';
+    box.classList.add('has-files');
+    list.innerHTML=`<span class="upload-chip">🎵 ${audioFile.name} <small>(${fmt(audioFile.size)})</small><button onclick="quitarAudio()">×</button></span>`;
+  } else { fill.style.width='0%'; box.classList.remove('has-files'); list.innerHTML=''; }
+}
+function quitarAudio(){ audioFile=null; renderAudio(); }
+
+function handleVoz(input){
+  const f=input.files[0]; if(!f) return;
+  if(f.size>20*1024*1024){ alert('⚠️ El archivo supera 20 MB'); input.value=''; return; }
+  vozFile=f;
+  renderVoz();
+  input.value='';
+}
+function renderVoz(){
+  const fill=document.getElementById('voz-fill');
+  const list=document.getElementById('voz-list');
+  const box=document.getElementById('voz-box');
+  if(vozFile){
+    fill.style.width=Math.min(100,(vozFile.size/(20*1024*1024))*100)+'%';
+    box.classList.add('has-files');
+    list.innerHTML=`<span class="upload-chip">🎙️ ${vozFile.name} <small>(${fmt(vozFile.size)})</small><button onclick="quitarVoz()">×</button></span>`;
+  } else { fill.style.width='0%'; box.classList.remove('has-files'); list.innerHTML=''; }
+}
+function quitarVoz(){ vozFile=null; renderVoz(); }
+
+// ── MODAL ──────────────────────────────
+function abrirModal(tipo,nombre,precio){
+  currentType=tipo;
+  fotosFiles=[]; audioFile=null; vozFile=null;
+  document.getElementById('modal-title').textContent='Personalizar: '+nombre;
+  document.getElementById('modal-subtitle').textContent=precio+' · Completa los detalles';
+  document.getElementById('campos-inv').style.display=tipo==='inv'?'block':'none';
+  document.getElementById('campos-carta').style.display=tipo==='carta'?'block':'none';
+  document.getElementById('campos-vid').style.display=tipo==='vid'?'block':'none';
+  document.getElementById('voz-field').style.display=tipo==='vid'?'block':'none';
+  const cfg=CONFIG[tipo]||CONFIG.inv;
+  if(tipo==='vid'){
+    document.getElementById('fotos-label').textContent='Fotos · máx. 12 fotos · 60 MB total';
+    document.getElementById('fotos-limit').textContent='Cada foto máx. 8 MB · hasta 12 fotos';
+    document.getElementById('fotos-input').setAttribute('accept','image/jpeg,image/png,image/webp');
+    document.getElementById('audio-label').textContent='Música de fondo';
+    document.getElementById('audio-text').textContent='Haz clic aquí · MP3';
+    document.getElementById('audio-limit').textContent='Máx. 1 archivo · hasta 10 MB';
+  } else if(tipo==='carta'){
+    document.getElementById('fotos-label').textContent='Fotos · máx. 10 fotos · 25 MB total';
+    document.getElementById('fotos-limit').textContent='Cada foto máx. 5 MB · hasta 10 fotos';
+    document.getElementById('audio-label').textContent='Audio de voz (opcional)';
+    document.getElementById('audio-text').textContent='Haz clic aquí · MP3, M4A';
+    document.getElementById('audio-limit').textContent='Máx. 1 archivo · hasta 10 MB · máx. 3 min';
+  } else {
+    document.getElementById('fotos-label').textContent='Fotos · máx. 10 fotos · 30 MB total';
+    document.getElementById('fotos-limit').textContent='Cada foto máx. 5 MB · hasta 10 fotos';
+    document.getElementById('audio-label').textContent='Música de fondo (opcional)';
+    document.getElementById('audio-text').textContent='Haz clic aquí · MP3';
+    document.getElementById('audio-limit').textContent='Máx. 1 archivo · hasta 8 MB';
+  }
+  renderFotosList(); renderAudio(); renderVoz();
+  document.getElementById('modal-submit-btn').onclick=function(){
+    cerrarModal(); abrirPago(nombre,precio);
+  };
+  document.getElementById('modal-submit-btn').textContent='Confirmar pedido · '+precio;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function cerrarModal(){ document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalOutside(e){ if(e.target===document.getElementById('modal-overlay')) cerrarModal(); }
+
+// ── PAGO ──────────────────────────────
+function abrirPago(producto,precio){
+  document.getElementById('pago-producto').textContent=producto;
+  document.getElementById('pago-precio').textContent=precio;
+  document.getElementById('pago-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function cerrarPago(){ document.getElementById('pago-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function cerrarPagoOutside(e){ if(e.target===document.getElementById('pago-overlay')) cerrarPago(); }
+function pagarAhora(){
+  document.getElementById('exito-prod').textContent=document.getElementById('pago-producto').textContent;
+  document.getElementById('exito-prec').textContent=document.getElementById('pago-precio').textContent;
+  document.querySelector('.pago-body').style.display='none';
+  document.getElementById('pago-exito').style.display='block';
+}
+function reiniciarPago(){ document.querySelector('.pago-body').style.display='block'; document.getElementById('pago-exito').style.display='none'; }
+function selMetodo(el,m){
+  document.querySelectorAll('.metodo-btn').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');
+  document.querySelectorAll('.pago-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pp-'+m).classList.add('active');
+}
+function toggleMenu(){}
+</script>
+</body>
+</html>
