@@ -292,6 +292,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:48px 5vw 28px;
   .footer-top{flex-direction:column;}
 }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('8sDiqzUW0_2wZSDKM');</script>
+  
 </head>
 <body>
 
@@ -916,10 +920,40 @@ function abrirPago(producto,precio){
 function cerrarPago(){ document.getElementById('pago-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function cerrarPagoOutside(e){ if(e.target===document.getElementById('pago-overlay')) cerrarPago(); }
 function pagarAhora(){
-  document.getElementById('exito-prod').textContent=document.getElementById('pago-producto').textContent;
-  document.getElementById('exito-prec').textContent=document.getElementById('pago-precio').textContent;
-  document.querySelector('.pago-body').style.display='none';
-  document.getElementById('pago-exito').style.display='block';
+  // Mostrar pantalla de éxito primero
+  document.getElementById('exito-prod').textContent = document.getElementById('pago-producto').textContent;
+  document.getElementById('exito-prec').textContent = document.getElementById('pago-precio').textContent;
+  document.querySelector('.pago-body').style.display = 'none';
+  document.getElementById('pago-exito').style.display = 'block';
+
+  // Recoger datos del formulario
+  const campos = document.querySelectorAll('.m-input');
+  const ocasion = document.querySelector('.m-tag.sel') ? document.querySelector('.m-tag.sel').textContent.trim() : 'No especificada';
+
+  const params = {
+    nombre:           campos[0] ? campos[0].value || 'Cliente' : 'Cliente',
+    producto:         document.getElementById('pago-producto').textContent,
+    precio:           document.getElementById('pago-precio').textContent,
+    ocasion:          ocasion,
+    para_quien:       campos[0] ? campos[0].value || '-' : '-',
+    mensaje:          campos[2] ? campos[2].value || '-' : '-',
+    correo_cliente:   campos[campos.length-2] ? campos[campos.length-2].value || 'no proporcionado' : 'no proporcionado',
+    whatsapp_cliente: campos[campos.length-1] ? campos[campos.length-1].value || 'no proporcionado' : 'no proporcionado',
+    orden:            '#RI-' + Math.floor(1000 + Math.random() * 9000)
+  };
+
+  // Actualizar número de orden en pantalla
+  document.querySelector('.exito-val:last-child') && 
+    (document.querySelector('.exito-row:last-child .exito-val').textContent = params.orden);
+
+  // Enviar correo
+  emailjs.send('service_to1cl4c', 'template_3kcrae4', params)
+    .then(function(){
+      console.log('Correo enviado ✅');
+    })
+    .catch(function(err){
+      console.error('Error al enviar correo:', err);
+    });
 }
 function reiniciarPago(){ document.querySelector('.pago-body').style.display='block'; document.getElementById('pago-exito').style.display='none'; }
 function selMetodo(el,m){
