@@ -784,86 +784,90 @@ document.addEventListener('click',function(e){
   }
 });
 
-// ── UPLOAD HANDLERS ──────────────────────────────
-const CONFIG = {
-  inv:  { fotosMax:10, fotosSize:5, totalMB:30, audioSize:8 },
-  carta:{ fotosMax:10, fotosSize:5, totalMB:25, audioSize:10 },
-  vid:  { fotosMax:12, fotosSize:8, totalMB:60, audioSize:20 }
-};
-let currentType='';
-let fotosFiles=[], audioFile=null, vozFile=null;
+// ── CLOUDINARY CONFIG ──
+const CLOUD_NAME = 'okb4d0rt';
+const UPLOAD_PRESET = 'chvksvox';
+let fotosUrls = [], audioUrl = null, vozUrl = null;
+let fotosFiles = [], audioFile = null, vozFile = null;
+
+async function subirCloudinary(file, tipo){
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', UPLOAD_PRESET);
+  fd.append('folder', 'remember-irie/' + tipo);
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
+    method: 'POST', body: fd
+  });
+  const data = await res.json();
+  return data.secure_url;
+}
 
 function fmt(bytes){ return (bytes/(1024*1024)).toFixed(1)+' MB'; }
 
 function handleFotos(input){
-  const cfg=CONFIG[currentType]||CONFIG.inv;
-  const newFiles=Array.from(input.files);
-  const errors=[];
-  newFiles.forEach(f=>{
-    if(f.size>cfg.fotosSize*1024*1024) errors.push(f.name+' supera '+cfg.fotosSize+' MB');
-    else if(fotosFiles.length>=cfg.fotosMax) errors.push('Límite de '+cfg.fotosMax+' fotos alcanzado');
+  const cfg = CONFIG[currentType] || CONFIG.inv;
+  const newFiles = Array.from(input.files);
+  const errors = [];
+  newFiles.forEach(f => {
+    if(f.size > cfg.fotosSize*1024*1024) errors.push(f.name+' supera '+cfg.fotosSize+' MB');
+    else if(fotosFiles.length >= cfg.fotosMax) errors.push('Límite de '+cfg.fotosMax+' fotos alcanzado');
     else fotosFiles.push(f);
   });
   if(errors.length) alert('⚠️ '+errors.join('\n'));
   renderFotosList();
-  input.value='';
+  input.value = '';
 }
 
 function renderFotosList(){
-  const cfg=CONFIG[currentType]||CONFIG.inv;
-  const list=document.getElementById('fotos-list');
-  const fill=document.getElementById('fotos-fill');
-  const box=document.getElementById('fotos-box');
-  const totalBytes=fotosFiles.reduce((s,f)=>s+f.size,0);
-  const pct=Math.min(100,(totalBytes/(cfg.totalMB*1024*1024))*100);
-  fill.style.width=pct+'%';
-  fill.style.background=pct>85?'#EF4444':'var(--fire)';
-  document.querySelector('#fotos-box .upload-box-limit').textContent=
+  const cfg = CONFIG[currentType] || CONFIG.inv;
+  const list = document.getElementById('fotos-list');
+  const fill = document.getElementById('fotos-fill');
+  const box  = document.getElementById('fotos-box');
+  const totalBytes = fotosFiles.reduce((s,f) => s+f.size, 0);
+  const pct = Math.min(100,(totalBytes/(cfg.totalMB*1024*1024))*100);
+  fill.style.width = pct+'%';
+  fill.style.background = pct>85 ? '#EF4444' : 'var(--fire)';
+  document.querySelector('#fotos-box .upload-box-limit').textContent =
     fotosFiles.length+' fotos · '+fmt(totalBytes)+' de '+cfg.totalMB+' MB usados';
-  box.classList.toggle('has-files',fotosFiles.length>0);
-  list.innerHTML=fotosFiles.map((f,i)=>
+  box.classList.toggle('has-files', fotosFiles.length>0);
+  list.innerHTML = fotosFiles.map((f,i) =>
     `<span class="upload-chip">🖼️ ${f.name.length>20?f.name.slice(0,18)+'…':f.name} <small>(${fmt(f.size)})</small><button onclick="quitarFoto(${i})">×</button></span>`
   ).join('');
 }
 function quitarFoto(i){ fotosFiles.splice(i,1); renderFotosList(); }
 
 function handleAudio(input){
-  const cfg=CONFIG[currentType]||CONFIG.inv;
-  const f=input.files[0]; if(!f) return;
-  if(f.size>cfg.audioSize*1024*1024){ alert('⚠️ El archivo supera '+cfg.audioSize+' MB'); input.value=''; return; }
-  audioFile=f;
-  renderAudio();
-  input.value='';
+  const cfg = CONFIG[currentType] || CONFIG.inv;
+  const f = input.files[0]; if(!f) return;
+  if(f.size > cfg.audioSize*1024*1024){ alert('⚠️ El archivo supera '+cfg.audioSize+' MB'); input.value=''; return; }
+  audioFile = f; renderAudio(); input.value='';
 }
 function renderAudio(){
-  const cfg=CONFIG[currentType]||CONFIG.inv;
-  const fill=document.getElementById('audio-fill');
-  const list=document.getElementById('audio-list');
-  const box=document.getElementById('audio-box');
+  const cfg = CONFIG[currentType] || CONFIG.inv;
+  const fill = document.getElementById('audio-fill');
+  const list = document.getElementById('audio-list');
+  const box  = document.getElementById('audio-box');
   if(audioFile){
-    const pct=Math.min(100,(audioFile.size/(cfg.audioSize*1024*1024))*100);
-    fill.style.width=pct+'%';
+    fill.style.width = Math.min(100,(audioFile.size/(cfg.audioSize*1024*1024))*100)+'%';
     box.classList.add('has-files');
-    list.innerHTML=`<span class="upload-chip">🎵 ${audioFile.name} <small>(${fmt(audioFile.size)})</small><button onclick="quitarAudio()">×</button></span>`;
+    list.innerHTML = `<span class="upload-chip">🎵 ${audioFile.name} <small>(${fmt(audioFile.size)})</small><button onclick="quitarAudio()">×</button></span>`;
   } else { fill.style.width='0%'; box.classList.remove('has-files'); list.innerHTML=''; }
 }
 function quitarAudio(){ audioFile=null; renderAudio(); }
 
 function handleVoz(input){
-  const f=input.files[0]; if(!f) return;
+  const f = input.files[0]; if(!f) return;
   if(f.size>20*1024*1024){ alert('⚠️ El archivo supera 20 MB'); input.value=''; return; }
-  vozFile=f;
-  renderVoz();
-  input.value='';
+  vozFile=f; renderVoz(); input.value='';
 }
 function renderVoz(){
-  const fill=document.getElementById('voz-fill');
-  const list=document.getElementById('voz-list');
-  const box=document.getElementById('voz-box');
+  const fill = document.getElementById('voz-fill');
+  const list = document.getElementById('voz-list');
+  const box  = document.getElementById('voz-box');
   if(vozFile){
-    fill.style.width=Math.min(100,(vozFile.size/(20*1024*1024))*100)+'%';
+    fill.style.width = Math.min(100,(vozFile.size/(20*1024*1024))*100)+'%';
     box.classList.add('has-files');
-    list.innerHTML=`<span class="upload-chip">🎙️ ${vozFile.name} <small>(${fmt(vozFile.size)})</small><button onclick="quitarVoz()">×</button></span>`;
+    list.innerHTML = `<span class="upload-chip">🎙️ ${vozFile.name} <small>(${fmt(vozFile.size)})</small><button onclick="quitarVoz()">×</button></span>`;
   } else { fill.style.width='0%'; box.classList.remove('has-files'); list.innerHTML=''; }
 }
 function quitarVoz(){ vozFile=null; renderVoz(); }
@@ -919,41 +923,72 @@ function abrirPago(producto,precio){
 }
 function cerrarPago(){ document.getElementById('pago-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function cerrarPagoOutside(e){ if(e.target===document.getElementById('pago-overlay')) cerrarPago(); }
-function pagarAhora(){
-  // Mostrar pantalla de éxito primero
-  document.getElementById('exito-prod').textContent = document.getElementById('pago-producto').textContent;
-  document.getElementById('exito-prec').textContent = document.getElementById('pago-precio').textContent;
-  document.querySelector('.pago-body').style.display = 'none';
-  document.getElementById('pago-exito').style.display = 'block';
+async function pagarAhora(){
+  // Mostrar loading
+  const btn = document.querySelector('.pay-now-btn');
+  btn.textContent = '⏳ Subiendo archivos...';
+  btn.disabled = true;
 
-  // Recoger datos del formulario
-  const campos = document.querySelectorAll('.m-input');
-  const ocasion = document.querySelector('.m-tag.sel') ? document.querySelector('.m-tag.sel').textContent.trim() : 'No especificada';
+  try {
+    // Subir fotos a Cloudinary
+    fotosUrls = [];
+    for(let i=0; i<fotosFiles.length; i++){
+      btn.textContent = `⏳ Subiendo foto ${i+1} de ${fotosFiles.length}...`;
+      const url = await subirCloudinary(fotosFiles[i], 'fotos');
+      fotosUrls.push(url);
+    }
 
-  const params = {
-    nombre:           campos[0] ? campos[0].value || 'Cliente' : 'Cliente',
-    producto:         document.getElementById('pago-producto').textContent,
-    precio:           document.getElementById('pago-precio').textContent,
-    ocasion:          ocasion,
-    para_quien:       campos[0] ? campos[0].value || '-' : '-',
-    mensaje:          campos[2] ? campos[2].value || '-' : '-',
-    correo_cliente:   campos[campos.length-2] ? campos[campos.length-2].value || 'no proporcionado' : 'no proporcionado',
-    whatsapp_cliente: campos[campos.length-1] ? campos[campos.length-1].value || 'no proporcionado' : 'no proporcionado',
-    orden:            '#RI-' + Math.floor(1000 + Math.random() * 9000)
-  };
+    // Subir audio
+    if(audioFile){
+      btn.textContent = '⏳ Subiendo música...';
+      audioUrl = await subirCloudinary(audioFile, 'audio');
+    }
 
-  // Actualizar número de orden en pantalla
-  document.querySelector('.exito-val:last-child') && 
-    (document.querySelector('.exito-row:last-child .exito-val').textContent = params.orden);
+    // Subir voz
+    if(vozFile){
+      btn.textContent = '⏳ Subiendo narración...';
+      vozUrl = await subirCloudinary(vozFile, 'voz');
+    }
 
-  // Enviar correo
-  emailjs.send('service_to1cl4c', 'template_3kcrae4', params)
-    .then(function(){
-      console.log('Correo enviado ✅');
-    })
-    .catch(function(err){
-      console.error('Error al enviar correo:', err);
-    });
+    // Mostrar pantalla de éxito
+    const prod  = document.getElementById('pago-producto').textContent;
+    const prec  = document.getElementById('pago-precio').textContent;
+    const orden = '#RI-' + Math.floor(1000 + Math.random()*9000);
+    document.getElementById('exito-prod').textContent = prod;
+    document.getElementById('exito-prec').textContent = prec;
+    document.querySelector('.exito-row:last-child .exito-val').textContent = orden;
+    document.querySelector('.pago-body').style.display = 'none';
+    document.getElementById('pago-exito').style.display = 'block';
+
+    // Recoger datos del formulario
+    const campos   = document.querySelectorAll('.m-input');
+    const ocasion  = document.querySelector('.m-tag.sel')?.textContent.trim() || 'No especificada';
+    const params = {
+      nombre:           campos[0]?.value || 'Cliente',
+      producto:         prod,
+      precio:           prec,
+      ocasion:          ocasion,
+      para_quien:       campos[0]?.value || '-',
+      mensaje:          campos[2]?.value || '-',
+      correo_cliente:   campos[campos.length-2]?.value || 'no proporcionado',
+      whatsapp_cliente: campos[campos.length-1]?.value || 'no proporcionado',
+      orden:            orden,
+      fotos:            fotosUrls.length > 0 ? fotosUrls.join('\n') : 'Sin fotos',
+      audio:            audioUrl || 'Sin audio',
+      voz:              vozUrl   || 'Sin narración'
+    };
+
+    // Enviar correo con EmailJS
+    await emailjs.send('service_to1cl4c', 'template_3kcrae4', params);
+    console.log('✅ Correo enviado y archivos subidos');
+
+  } catch(err){
+    console.error('Error:', err);
+    alert('Hubo un problema al procesar tu pedido. Por favor escríbenos por WhatsApp.');
+  } finally {
+    btn.textContent = 'Pagar ahora →';
+    btn.disabled = false;
+  }
 }
 function reiniciarPago(){ document.querySelector('.pago-body').style.display='block'; document.getElementById('pago-exito').style.display='none'; }
 function selMetodo(el,m){
